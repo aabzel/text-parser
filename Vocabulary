@@ -1,0 +1,61 @@
+package com.company;
+
+import java.io.*;
+/**
+ * Created by aabzel on 28.04.2017.
+ */
+public class Vocabulary {
+    String fileName;
+    Vocabulary(String name ) {
+        fileName = name;
+        System.out.println(fileName);
+    }
+
+    public void put(String word){
+        String str;
+        int numOfLinesInFile;
+        try{
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
+            //writer.append(word);
+            //writer.write(word, , word.length());
+            writer.write(word+"\n");
+            writer.close();
+        }catch(IOException ехс){
+            System.out.println("Error write");
+        }
+
+    }
+    public boolean check(String word) {
+        String str;
+        int numOfLinesInFile;
+        try{
+
+            BufferedReader reader = new BufferedReader(new FileReader(fileName ));
+
+            numOfLinesInFile=0;//28 000
+            do {
+                str = reader.readLine();
+                if (null != str) {
+                    if(str.contains(word)){
+                        reader.close();
+                        return true;
+                    }
+                    numOfLinesInFile++;
+                }else{
+                    //System.out.println("numOfSamplesInWavFile: "+numOfSamplesInWavFile);
+                }
+            }while(null!=str);
+
+            reader.close();
+
+            return false;
+
+
+
+        }catch(IOException ехс){
+            System.out.println("Error");
+            return false;
+        }
+
+    }
+}
