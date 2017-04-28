@@ -1,0 +1,43 @@
+package com.company;
+
+import java.io.*;
+
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        if(0<args.length) {
+            String inPutFileAdderss=args[0];
+        } else {
+            String inPutFileAdderss="input_text.txt";
+        }
+        String inPutFileAdderss="input_text.txt";
+        int chi;
+        char inChar;
+        WordsParserFSM wParserFSM= new WordsParserFSM();
+        try {
+
+
+            BufferedReader in = new BufferedReader(new FileReader(inPutFileAdderss));
+    
+            String s;
+
+            do{
+                chi = in.read();
+                wParserFSM.input(chi);
+                wParserFSM.proc();
+            }while (chi != (-1));
+
+
+            //Также не забываем закрыть файл
+            in.close();
+            wParserFSM.print_stat();
+
+
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("\n\nDone!");
+    }
+}
