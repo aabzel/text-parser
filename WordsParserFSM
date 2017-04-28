@@ -1,0 +1,161 @@
+package com.company;
+
+/**
+ * Created by aabzel on 28.04.2017.
+ */
+public class WordsParserFSM {
+    int curState;
+    int input;
+    int action;
+    int stateTable[][];
+    int actionTable[][];
+
+    Character inputChar;
+    String curWord;
+    int treeLetterWordCnt;
+    int twoLetterWordCnt;
+    int ammountDifferentOfWords;
+    int ammountOfWords;
+    int treeLetterDiffWordCnt;
+    Vocabulary dictionary;
+    Vocabulary log;
+    Vocabulary lexicon;
+
+    WordsParserFSM(){
+        curWord="";
+        input    = 0 ;
+        action   = 0 ;
+        curState = 0 ;
+        treeLetterDiffWordCnt=0;
+        stateTable= new int[2][5];
+        actionTable= new int[2][5];
+
+        stateTable[0][0] = 1;
+        stateTable[0][1] = 2;
+        stateTable[0][2] = 3;
+        stateTable[0][3] = 4;
+        stateTable[0][4] = 4;
+        stateTable[1][0] = 0;
+        stateTable[1][1] = 0;
+        stateTable[1][2] = 0;
+        stateTable[1][3] = 0;
+        stateTable[1][4] = 0;
+
+        actionTable[0][0] = 1;
+        actionTable[0][1] = 2;
+        actionTable[0][2] = 3;
+        actionTable[0][3] = 4;
+        actionTable[0][4] = 5;
+        actionTable[1][0] = 6;
+        actionTable[1][1] = 7;
+        actionTable[1][2] = 8;
+        actionTable[1][3] = 9;
+        actionTable[1][4] = 10;
+
+        treeLetterWordCnt=0;
+        twoLetterWordCnt=0;
+        ammountDifferentOfWords=0;
+        ammountOfWords=0;
+
+        dictionary= new Vocabulary("Vocabulary.txt");
+        log= new Vocabulary("newWords.txt");
+        lexicon= new Vocabulary("lexicon.txt");
+
+    }
+    public void input(int ich){
+        Character ch=(char) ich;
+        ch=ch.toLowerCase(ch);
+        inputChar = ch;
+        if ((( 'a' <= ch)&&(ch <= 'z')) || (( 'A' <= ch )&&(ch <= 'Z'))){
+            // символ принадлежит к английскому алфавиту
+            input = 0;
+        }else {
+            input = 1;
+        }
+    }
+
+    public void proc(){
+        action=actionTable[input][curState];
+        curState=stateTable[input][curState];
+
+        switch(action) {
+            case 1:
+                curWord = curWord+((char)inputChar);
+                break;
+            case 2:
+                curWord = curWord+((char)inputChar);
+                break;
+            case 3:
+                curWord = curWord+((char)inputChar);
+                break;
+            case 4:
+                curWord = curWord+((char)inputChar);
+                break;
+            case 5:
+                curWord = curWord+((char)inputChar);
+                break;
+            case 6:
+                curWord = "";
+                break;
+            case 7:
+                ammountOfWords++;
+                update_lexicon(curWord);
+                curWord = "";
+                break;
+            case 8:
+                ammountOfWords++;
+                update_lexicon(curWord);
+                twoLetterWordCnt++;
+                curWord = "";
+                break;
+            case 9:
+                //System.out.println(curWord);
+                ammountOfWords++;
+                update_lexicon(curWord);
+                treeLetterWordCnt++;
+                //такое слово есть в файле?
+                if(!dictionary.check(curWord)){
+                    //System.out.println("New word: " + curWord);
+                    treeLetterDiffWordCnt++;
+                    dictionary.put( curWord );
+                    log.put(curWord);
+                }else {
+                    //System.out.println("Familiar word: " + curWord);
+                }
+                curWord="";
+
+                break;
+            case 10:
+                ammountOfWords++;
+                update_lexicon(curWord);
+                curWord="";
+                break;
+
+            default:
+                System.out.println("\n\nError in proc!");
+
+        }
+    }
+    public void update_lexicon(String word) {
+        //такое слово есть в файле?
+        if(!lexicon.check(word)) {
+            //System.out.println("New word: " + curWord);
+            ammountDifferentOfWords++;
+            lexicon.put(word);
+        } else {
+            //System.out.println("Familiar word: " + curWord);
+        }
+    }
+
+
+    public void print_stat() {
+        System.out.println("ammoutn of words in file:  "+ammountOfWords);
+        System.out.println("ammoutn of 2 letter words in file:  "+twoLetterWordCnt);
+        System.out.println("ammoutn of 3 letter words in file:  "+treeLetterWordCnt);
+        System.out.println("ammoutn of different words in file:  "+ammountDifferentOfWords);
+        System.out.println("ammoutn of different 3 letter words in file:  "+treeLetterDiffWordCnt);
+    }
+
+
+
+}
